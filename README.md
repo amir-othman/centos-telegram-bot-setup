@@ -14,9 +14,14 @@ Welcome to the Telegram Message Forward Bot setup script repository! This script
 
 This script will:
 1. Update CentOS repositories to use `vault.centos.org` 🏗️
-2. Install `nano` editor ✍️
-3. Install Python 3.8 🐍
-4. Install necessary Python modules for the Telegram Message Forward Bot, including `requests` and `python-telegram-bot` 📦
+2. Set Google DNS for reliable DNS resolution 🌐
+3. Install `nano` editor ✍️
+4. Install `git` for cloning repositories 🛠️
+5. Install Python 3.8 🐍
+6. Install necessary Python modules for the Telegram Message Forward Bot, including `requests`, `python-telegram-bot`, and `python-dotenv` 📦
+7. Create necessary files and prompt for environment variables 📂
+8. Create a `.env` file with the provided environment variables 📝
+9. Create a `pictures` directory for storing images 🖼️
 
 ## Prerequisites
 
@@ -41,6 +46,8 @@ Before running the script, ensure that you:
     ```bash
     sudo ./setup.sh
     ```
+
+4. Follow the prompts to enter the necessary environment variables.
 
 ## Author
 
