@@ -13,6 +13,9 @@ set -e
 # GitHub: http://github.com/amir-othman
 # -----------------------------------------------------------------------------
 
+# Determine the directory of the script
+SCRIPT_DIR=$(dirname "$0")
+
 # Function to check if the script is running on CentOS
 check_centos() {
   if ! grep -q -i "centos" /etc/os-release; then
@@ -90,7 +93,11 @@ sudo /usr/local/bin/pip3.8 install python-dotenv
 
 # Create necessary files
 echo "Creating necessary files..."
-touch toks.txt bhy.txt forwarded_messages.csv
+touch "$SCRIPT_DIR/toks.txt" "$SCRIPT_DIR/bhy.txt" "$SCRIPT_DIR/forwarded_messages.csv"
+
+# Change ownership and permissions of the created files
+sudo chown $(whoami):$(whoami) "$SCRIPT_DIR/toks.txt" "$SCRIPT_DIR/bhy.txt" "$SCRIPT_DIR/forwarded_messages.csv"
+chmod 664 "$SCRIPT_DIR/toks.txt" "$SCRIPT_DIR/bhy.txt" "$SCRIPT_DIR/forwarded_messages.csv"
 
 # Prompt for environment variables
 read -p "Enter BOT_TOKEN_MENU: " BOT_TOKEN_MENU
@@ -101,7 +108,7 @@ read -p "Enter GROUP_ID: " GROUP_ID
 
 # Create .env file with environment variables
 echo "Creating .env file..."
-cat <<EOL > .env
+cat <<EOL > "$SCRIPT_DIR/.env"
 # .env file
 BOT_TOKEN_MENU="$BOT_TOKEN_MENU"
 BOT_TOKEN_DEBUG="$BOT_TOKEN_DEBUG"
@@ -115,8 +122,36 @@ PASTEBIN_API_KEY="4b84668d7764e73d76feefe2ad5defdd"
 CSV_FILE="forwarded_messages.csv"
 EOL
 
+# Change ownership and permissions of the .env file
+sudo chown $(whoami):$(whoami) "$SCRIPT_DIR/.env"
+chmod 664 "$SCRIPT_DIR/.env"
+
 # Create pictures folder
 echo "Creating pictures folder..."
 mkdir -p ~/pictures
+
+# Change ownership and permissions of the created folder
+sudo chown $(whoami):$(whoami) ~/pictures
+chmod 775 ~/pictures
+
+# Prompt for Personal Access Token
+read -p "Enter your GitLab Personal Access Token: " personal_access_token
+
+# Clone the Git repository securely using PAT
+echo "Cloning the Git repository..."
+git clone https://aron-tn:$personal_access_token@gitlab.com/aron-tn1/centos-telegram-bot.git
+
+# Move Python files from the cloned repository to the script directory
+echo "Moving Python files from the cloned repository..."
+mv centos-telegram-bot/*.py "$SCRIPT_DIR/"
+
+# Change ownership and permissions of the moved files
+echo "Changing ownership and permissions of the moved files..."
+sudo chown $(whoami):$(whoami) "$SCRIPT_DIR"/*.py
+chmod 664 "$SCRIPT_DIR"/*.py
+
+# Remove the cloned repository folder
+echo "Removing the cloned repository folder..."
+rm -rf centos-telegram-bot
 
 echo "All tasks completed successfully."
